@@ -49,6 +49,16 @@ class Myinfo extends CI_Controller {
 	      	
 	    }
 	
+	//life history
+	    if($this->input->post('personal_history')){
+	    $update_data['uid']=1; // this is to be taken from session later as of now hard coded
+     	$update_data['exercise']=$this->input->post('exercise');
+		$update_data['alcohol']=$this->input->post('alcohol');
+	    $update_data['smoking']=$this->input->post('smoking');
+  	    $this->myinfo_model->updateLifeHistory($update_data);
+	      	
+	    }
+	
 		
 		$user_info=$this->myinfo_model->get_info(1); //  uid is to be taken from session later as of now hard coded
         foreach($user_info as $uinfo){
@@ -84,15 +94,25 @@ class Myinfo extends CI_Controller {
 		$data['dob_dropdown_month'] = $month; 
 		$year=$this->general->buildYearDropdown("year",$dobArray[0]);
         $data['dob_dropdown_year'] = $year;
-        $personal_info=$this->myinfo_model->employee_personalInfo(1);
+        $personal_info=$this->myinfo_model->user_personalInfo(1);
 		foreach($personal_info as $pinfo){
 		$data['weight']=$pinfo->weight;
 		$data['height']=$pinfo->height;
 		}
+    //print_r($this->input);
+	
+	//lifehistory
+		$lifeHistory=$this->myinfo_model->user_lifeHistory(1);
+		foreach($lifeHistory as $lh){
+			$lh_option['smoking']=$lh->smoking;
+			$lh_option['alcohol']=$lh->alcohol;
+			$lh_option['exercise']=$lh->exercise;
+		}
+	    $data['lh_radio_option']=$lh_option;
+			
 		$this->load->helper('url');
 		$this->load->view('myinfo',$data);
-    //print_r($this->input);
-		
+
 	}
 }
 
